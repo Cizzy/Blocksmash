@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Destroy_Block : MonoBehaviour {
 
-	public int difficulty = 10;
+	public int difficulty = 2;
 
 	private bool pressed=false;
 	private GameObject newblockpiece1;
