@@ -2,16 +2,16 @@
 using System.Collections;
 
 public class Destroy_Block : MonoBehaviour {
-
-	public int difficulty = 2;
-
+	
+	public int difficulty = 10;
+	
 	private bool pressed=false;
 	private GameObject newblockpiece1;
 	private GameObject newblockpiece2;
 	private float velocity1;
 	private float velocity2;
 	private bool reset=false;
-
+	
 	void Update () {
 		if (Input.touchCount == 3 && reset == false) {
 			reset = true;
@@ -21,19 +21,29 @@ public class Destroy_Block : MonoBehaviour {
 			reset=false;
 		}
 		feckoff ();//rotate block pieces and fire them off screen
+		GameObject[] copies=null;
 		if (Input.touchCount == 1 && pressed == false) {
 			pressed = true;
 			RaycastHit2D destroyedblock = Physics2D.Raycast (Camera.main.ScreenToWorldPoint ((Input.GetTouch (0).position)), Vector2.zero);
 			if (destroyedblock.collider != null) {
+				/*
 				Destroy (destroyedblock.transform.gameObject, 0.0f);//0.5f -> destroy block half a second later
 				spawn(destroyedblock.transform);
+				*/
+				if(copies==null){
+					copies=GameObject.FindGameObjectsWithTag(destroyedblock.transform.tag);
+				}
+				foreach(GameObject copy in copies){
+					Destroy(copy);
+					spawn(copy.transform);
+				}
 			}
 		} 
 		else if (Input.touchCount == 0) {
 			pressed=false;
 		}
 	}
-
+	
 	void spawn(Transform blockposition){
 		GameObject blockpiece1 = new GameObject();
 		GameObject blockpiece2 = new GameObject();
@@ -85,20 +95,20 @@ public class Destroy_Block : MonoBehaviour {
 		blockpiece2meshfilter.mesh = blockpiece2mesh;
 		//
 		//blockpiece3mesh.Clear ();
-
-
+		
+		
 		//spawn pieces
 		newblockpiece1 = (GameObject)Instantiate(blockpiece1,blockposition.position,Quaternion.identity);
 		newblockpiece1.renderer.material.color=blockposition.renderer.material.color;
 		velocity1=Random.Range(200,250);
 		Destroy (newblockpiece1, 0.5f);
-
-
+		
+		
 		newblockpiece2 = (GameObject)Instantiate(blockpiece2,blockposition.position,Quaternion.identity);
 		newblockpiece2.renderer.material.color=blockposition.renderer.material.color;
 		velocity2=Random.Range(-200,-250);
 		Destroy (newblockpiece2, 0.5f);
-
+		
 	}
 	void feckoff(){
 		if (newblockpiece1) {
